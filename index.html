@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Memo App</title>
+<style>
+* { 
+  box-sizing: border-box; 
+  margin: 0;
+  padding: 0;
+}
+
+html, body { 
+  height: 100%; 
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+button { 
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.page {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 16px;
+  background: linear-gradient(135deg, #F5DEB3 0%, #F0D9A8 100%);
+}
+
+/* ===== LIST ===== */
+#screenList { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 12px;
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+#memoList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.listHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.listHeader h1 {
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  color: #2d5016;
+}
+
+.listHeader button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 12px;
+  background: #4CAF50;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+.listHeader button:hover {
+  background: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+.listHeader button:active {
+  transform: translateY(0);
+}
+
+.memoItem {
+  padding: 16px;
+  border: none;
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.2s ease;
+}
+
+.memoItem:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.memoTitle { 
+  font-weight: 600;
+  color: #2d5016;
+  font-size: 16px;
+  word-break: break-word;
+}
+
+.memoDate { 
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+  white-space: nowrap;
+}
+
+/* ===== DETAIL ===== */
+#screenDetail { 
+  display: none; 
+  flex-direction: column; 
+  gap: 12px;
+  height: 100%;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.topBar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.titleInput {
+  flex: 1;
+  min-width: 200px;
+  padding: 14px 16px;
+  border: 2px solid #4CAF50;
+  border-radius: 12px;
+  font-size: 16px;
+  background: white;
+  color: #2d5016;
+  font-weight: 600;
+  transition: border-color 0.2s ease;
+}
+
+.titleInput:focus {
+  outline: none;
+  border-color: #45a049;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+.editBtn {
+  padding: 14px 20px;
+  border: none;
+  border-radius: 12px;
+  background: #4CAF50;
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+  white-space: nowrap;
+}
+
+.backBtn {
+  padding: 14px 16px;
+  border: none;
+  border-radius: 12px;
+  background: #4CAF50;
+  color: white;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(45, 80, 22, 0.25);
+  line-height: 1;
+}
+
+.backBtn:hover {
+  background: #45a049;
+  transform: translateY(-1px);
+}
+
+.editBtn:hover {
+  background: #45a049;
+  transform: translateY(-1px);
+}
+
+.stickyBar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 4px 0;
+}
+
+.tab {
+  padding: 10px 18px;
+  border: 2px solid #4CAF50;
+  border-radius: 999px;
+  background: white;
+  color: #4CAF50;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.tab:hover {
+  background: #f1f8f4;
+}
+
+.tab.active { 
+  background: #4CAF50;
+  color: white;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+.copyBtn {
+  margin-left: auto;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 12px;
+  background: #4CAF50;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+.copyBtn:hover {
+  background: #45a049;
+  transform: translateY(-1px);
+}
+
+.delBtn {
+  padding: 14px 20px;
+  border: none;
+  border-radius: 12px;
+  background: #f44336;
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(244, 67, 54, 0.3);
+}
+
+.delBtn:hover {
+  background: #da190b;
+  transform: translateY(-1px);
+}
+
+.body {
+  flex: 1;
+  min-height: 300px;
+  border: 2px solid #4CAF50;
+  border-radius: 16px;
+  display: flex;
+  padding: 0;
+  background: white;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+textarea {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  border: none;
+  resize: none;
+  outline: none;
+  padding: 16px;
+  font-size: 15px;
+  line-height: 1.6;
+  overflow: auto;
+  color: #333;
+  font-family: inherit;
+}
+
+textarea::placeholder {
+  color: #999;
+}
+
+.hidden { 
+  display: none !important;
+}
+
+.bottomBar {
+  margin-top: auto;
+}
+
+.bottomBar input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid #4CAF50;
+  border-radius: 12px;
+  font-size: 15px;
+  background: white;
+  transition: border-color 0.2s ease;
+}
+
+.bottomBar input:focus {
+  outline: none;
+  border-color: #45a049;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+/* ===== 모바일 최적화 ===== */
+@media (max-width: 640px) {
+  .page {
+    padding: 12px;
+    gap: 12px;
+  }
+  
+  .topBar {
+    gap: 8px;
+  }
+  
+  .titleInput {
+    font-size: 15px;
+    padding: 12px 14px;
+  }
+  
+  .editBtn, .delBtn {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
+  .backBtn {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+  
+  .stickyBar {
+    gap: 6px;
+  }
+  
+  .tab {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+  
+  .copyBtn {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+  
+  .body {
+    min-height: 200px;
+  }
+  
+  textarea {
+    padding: 12px;
+    font-size: 14px;
+  }
+  
+  .memoItem {
+    padding: 14px;
+  }
+  
+  .memoTitle {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 400px) {
+  .page {
+    padding: 10px;
+  }
+  
+  .tab {
+    padding: 7px 12px;
+    font-size: 12px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<!-- LIST SCREEN -->
+<div id="screenList">
+  <div class="listHeader">
+    <h2>메모</h2>
+    <button onclick="createMemo()">+ 새 메모</button>
+  </div>
+  <div id="memoList"></div>
+</div>
+
+<!-- DETAIL SCREEN -->
+<div id="screenDetail">
+  <div class="topBar">
+    <button class="backBtn" onclick="goList()">←</button>
+    <input id="titleInput" class="titleInput" placeholder="제목" />
+    <button id="editBtn" class="editBtn" onclick="toggleEdit()">편집</button>
+    <button class="delBtn" id="delBtn" onclick="deleteCurrent()">삭제</button>
+  </div>
+
+  <div class="stickyBar">
+    <button class="tab active" onclick="switchTab('en')" id="tabEn">영문</button>
+    <button class="tab" onclick="switchTab('ko')" id="tabKo">번역</button>
+    <button class="copyBtn" onclick="copyEnglish()">영문 복사</button>
+  </div>
+
+  <div class="body">
+    <textarea id="contentEn"></textarea>
+    <textarea id="contentKo" class="hidden"></textarea>
+  </div>
+
+  <div class="bottomBar">
+    <input id="tagsInput" placeholder="태그 (쉼표 구분)" />
+  </div>
+</div>
+
+</div>
+
+<script>
+let state = {
+  memos: [],
+  currentId: null,
+  editing: false
+};
+
+function saveAll() {
+  localStorage.setItem("memos", JSON.stringify(state.memos));
+}
+
+function loadAll() {
+  const data = localStorage.getItem("memos");
+  if (data) state.memos = JSON.parse(data);
+}
+
+function formatDate(date) {
+  return new Date(date).toLocaleDateString();
+}
+
+function renderList() {
+  const container = document.getElementById("memoList");
+  container.innerHTML = "";
+
+  state.memos
+    .sort((a,b)=> new Date(b.updatedAt)-new Date(a.updatedAt))
+    .forEach(memo=>{
+      const div = document.createElement("div");
+      div.className="memoItem";
+      div.innerHTML = `
+        <div class="memoTitle">${memo.title || "(제목 없음)"}</div>
+        <div class="memoDate">${formatDate(memo.updatedAt)}</div>
+      `;
+      div.onclick = ()=> openMemo(memo.id);
+      container.appendChild(div);
+    });
+}
+
+function createMemo() {
+  const id = Date.now().toString();
+  const now = new Date().toISOString();
+  const memo = {
+    id,
+    title:"",
+    contentEn:"",
+    contentKo:"",
+    tags:[],
+    createdAt:now,
+    updatedAt:now
+  };
+  state.memos.push(memo);
+  saveAll();
+  openMemo(id);
+  setEditing(true);
+}
+
+function openMemo(id) {
+  state.currentId = id;
+  const memo = state.memos.find(m=>m.id===id);
+
+  document.getElementById("titleInput").value = memo.title;
+  document.getElementById("contentEn").value = memo.contentEn;
+  document.getElementById("contentKo").value = memo.contentKo;
+  document.getElementById("tagsInput").value = memo.tags.join(",");
+
+  setEditing(false);
+
+  document.getElementById("screenList").style.display="none";
+  document.getElementById("screenDetail").style.display="flex";
+}
+
+function goList() {
+  document.getElementById("screenDetail").style.display="none";
+  document.getElementById("screenList").style.display="flex";
+  renderList();
+}
+
+function toggleEdit() {
+  if (!state.editing) {
+    setEditing(true);
+  } else {
+    saveCurrent();
+    setEditing(false);
+  }
+}
+
+function setEditing(value) {
+  state.editing = value;
+  document.getElementById("editBtn").textContent = value ? "저장" : "편집";
+  document.getElementById("titleInput").readOnly = !value;
+  document.getElementById("contentEn").readOnly = !value;
+  document.getElementById("contentKo").readOnly = !value;
+  document.getElementById("tagsInput").readOnly = !value;
+  document.getElementById("delBtn").style.display = value ? "inline-block" : "none"; // ✅
+}
+
+function saveCurrent() {
+  const memo = state.memos.find(m=>m.id===state.currentId);
+  memo.title = document.getElementById("titleInput").value;
+  memo.contentEn = document.getElementById("contentEn").value;
+  memo.contentKo = document.getElementById("contentKo").value;
+  memo.tags = document.getElementById("tagsInput").value.split(",").map(t=>t.trim()).filter(Boolean);
+  memo.updatedAt = new Date().toISOString();
+  saveAll();
+}
+
+function switchTab(tab) {
+  document.getElementById("tabEn").classList.remove("active");
+  document.getElementById("tabKo").classList.remove("active");
+  document.getElementById("contentEn").classList.add("hidden");
+  document.getElementById("contentKo").classList.add("hidden");
+
+  if (tab==="en") {
+    document.getElementById("tabEn").classList.add("active");
+    document.getElementById("contentEn").classList.remove("hidden");
+  } else {
+    document.getElementById("tabKo").classList.add("active");
+    document.getElementById("contentKo").classList.remove("hidden");
+  }
+}
+
+async function copyEnglish() {
+  const text = document.getElementById("contentEn").value;
+  if (!text.trim()) return alert("영문 내용이 없습니다.");
+  await navigator.clipboard.writeText(text);
+  alert("영문이 복사되었습니다.");
+}
+
+function deleteCurrent() {
+  const memo = state.memos.find(m => m.id === state.currentId);
+  const name = memo?.title?.trim() || "(제목 없음)";
+  if (!confirm(`${name} 메모를 삭제할까요? 되돌릴 수 없습니다.`)) return;
+
+  state.memos = state.memos.filter(m => m.id !== state.currentId);
+  state.currentId = null;
+  saveAll();
+  goList();
+}
+
+loadAll();
+renderList();
+</script>
+
+</body>
+</html>
