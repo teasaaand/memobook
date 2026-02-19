@@ -160,16 +160,16 @@ button {
 
 .backBtn {
   padding: 14px 16px;
-  border: none;
+  border: 1px solid #ccc;
   border-radius: 8px;
-  background-color: #4CAF50;
-  color: white;
+  background-color: #f5deb3;
+  color: #333;
   font-weight: 700;
   line-height: 1;
 }
 
 .backBtn:hover {
-  background-color: #45a049;
+  background-color: #f5dfbf;
 }
 
 .editBtn:hover {
@@ -206,18 +206,21 @@ button {
 }
 
 .copyBtn {
-  margin-left: auto;
   padding: 10px 18px;
-  border: none;
+  border: 1px solid #ccc;
   border-radius: 8px;
-  background-color: #4CAF50;
-  color: white;
+  background-color: white;
+  color: #333;
   font-weight: 600;
   font-size: 14px;
 }
 
+.copyBtnStart {
+  margin-left: auto;
+}
+
 .copyBtn:hover {
-  background-color: #45a049;
+  background-color: #f5deb3;
 }
 
 .delBtn {
@@ -386,6 +389,7 @@ textarea::placeholder {
   <div class="stickyBar">
     <button class="tab active" onclick="switchTab('en')" id="tabEn">영문</button>
     <button class="tab" onclick="switchTab('ko')" id="tabKo">번역</button>
+    <button class="copyBtn copyBtnStart" onclick="copySwapEnglish()">스왑 복사</button>
     <button class="copyBtn" onclick="copyEnglish()">영문 복사</button>
   </div>
 
@@ -527,6 +531,33 @@ async function copyEnglish() {
   if (!text.trim()) return alert("영문 내용이 없습니다.");
   await navigator.clipboard.writeText(text);
   alert("영문이 복사되었습니다.");
+}
+
+function swapPlaceholders(text) {
+  const conversions = {
+    char: "user",
+    user: "char"
+  };
+
+  let result = text.replace(/\{\{(.*?)\}\}/gi, (_, word) => {
+    const key = word.toLowerCase();
+    return "{{" + (conversions[key] || key) + "}}";
+  });
+
+  result = result.replace(/<([^>]+)>/gi, (_, word) => {
+    const key = word.toLowerCase();
+    return "<" + (conversions[key] || key) + ">";
+  });
+
+  return result;
+}
+
+async function copySwapEnglish() {
+  const text = document.getElementById("contentEn").value;
+  if (!text.trim()) return alert("영문 내용이 없습니다.");
+  const swapped = swapPlaceholders(text);
+  await navigator.clipboard.writeText(swapped);
+  alert("스왑 복사가 완료되었습니다.");
 }
 
 function deleteCurrent() {
