@@ -5,20 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Memo App</title>
 <style>
-* { 
-  box-sizing: border-box; 
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-html, body { 
-  height: 100%; 
+html, body {
+  height: 100%;
   font-family: sans-serif;
   -webkit-font-smoothing: antialiased;
   background-color: #f9f9f9;
 }
 
-button { 
+button {
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: inherit;
@@ -34,9 +34,9 @@ button {
 }
 
 /* ===== LIST ===== */
-#screenList { 
-  display: flex; 
-  flex-direction: column; 
+#screenList {
+  display: flex;
+  flex-direction: column;
   gap: 12px;
   max-width: 800px;
   width: 100%;
@@ -64,6 +64,27 @@ button {
   color: #222;
 }
 
+.listActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.moreBtn {
+  padding: 14px 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f5deb3;
+  color: #333;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.moreBtn:hover {
+  background-color: #f5dfbf;
+}
+
 .listHeader button {
   padding: 12px 16px;
   border: none;
@@ -82,6 +103,20 @@ button {
   transform: none;
 }
 
+.listHeader .moreBtn {
+  padding: 14px 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f5deb3;
+  color: #333;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.listHeader .moreBtn:hover {
+  background-color: #f5dfbf;
+}
+
 .memoItem {
   padding: 12px;
   border: 1px solid #ddd;
@@ -98,14 +133,14 @@ button {
   background-color: #f1f1f1;
 }
 
-.memoTitle { 
+.memoTitle {
   font-weight: 600;
   color: #222;
   font-size: 16px;
   word-break: break-word;
 }
 
-.memoDate { 
+.memoDate {
   font-size: 12px;
   color: #606060;
   margin-top: 4px;
@@ -113,9 +148,9 @@ button {
 }
 
 /* ===== DETAIL ===== */
-#screenDetail { 
-  display: none; 
-  flex-direction: column; 
+#screenDetail {
+  display: none;
+  flex-direction: column;
   gap: 12px;
   height: 100%;
   max-width: 900px;
@@ -199,7 +234,7 @@ button {
   background-color: #f1f1f1;
 }
 
-.tab.active { 
+.tab.active {
   background-color: #4CAF50;
   color: white;
   border-color: #4CAF50;
@@ -266,7 +301,7 @@ textarea::placeholder {
   color: #999;
 }
 
-.hidden { 
+.hidden {
   display: none !important;
 }
 
@@ -290,23 +325,82 @@ textarea::placeholder {
   box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.15);
 }
 
-/* ===== 모바일 최적화 ===== */
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.modalCard {
+  width: min(360px, 100%);
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modalTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 2px;
+}
+
+.modalActionBtn {
+  width: 100%;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 8px;
+  background-color: #4CAF50;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.modalActionBtn:hover {
+  background-color: #45a049;
+}
+
+.modalCloseBtn {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: white;
+  color: #333;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.modalCloseBtn:hover {
+  background: #f1f1f1;
+}
+
 @media (max-width: 640px) {
   .page {
     padding: 12px;
     gap: 12px;
   }
-  
+
   .topBar {
     gap: 8px;
   }
-  
+
   .titleInput {
     font-size: 15px;
     padding: 12px 14px;
   }
-  
-  .editBtn, .delBtn {
+
+  .editBtn,
+  .delBtn {
     padding: 12px 16px;
     font-size: 14px;
   }
@@ -315,34 +409,34 @@ textarea::placeholder {
     padding: 12px 14px;
     font-size: 14px;
   }
-  
+
   .stickyBar {
     gap: 6px;
   }
-  
+
   .tab {
     padding: 8px 14px;
     font-size: 13px;
   }
-  
+
   .copyBtn {
     padding: 8px 14px;
     font-size: 13px;
   }
-  
+
   .body {
     min-height: 52dvh;
   }
-  
+
   textarea {
     padding: 12px;
     font-size: 14px;
   }
-  
+
   .memoItem {
     padding: 14px;
   }
-  
+
   .memoTitle {
     font-size: 15px;
   }
@@ -356,7 +450,7 @@ textarea::placeholder {
   .body {
     min-height: 48dvh;
   }
-  
+
   .tab {
     padding: 7px 12px;
     font-size: 12px;
@@ -365,97 +459,233 @@ textarea::placeholder {
 </style>
 </head>
 <body>
-
 <div class="page">
 
-<!-- LIST SCREEN -->
-<div id="screenList">
-  <div class="listHeader">
-    <h2>메모</h2>
-    <button onclick="createMemo()">+ 새 메모</button>
+  <!-- LIST SCREEN -->
+  <div id="screenList">
+    <div class="listHeader">
+      <h2>메모</h2>
+      <div class="listActions">
+        <button type="button" class="moreBtn" onclick="openToolsModal()">⋯</button>
+        <button type="button" onclick="createMemo()">+ 새 메모</button>
+      </div>
+      <input id="importJsonInput" class="hidden" type="file" accept="application/json,.json" onchange="importJsonBackup(event)" />
+    </div>
+    <div id="memoList"></div>
   </div>
-  <div id="memoList"></div>
+
+  <!-- DETAIL SCREEN -->
+  <div id="screenDetail">
+    <div class="topBar">
+      <button class="backBtn" onclick="goList()">←</button>
+      <input id="titleInput" class="titleInput" placeholder="제목" />
+      <button id="editBtn" class="editBtn" onclick="toggleEdit()">편집</button>
+      <button class="delBtn" id="delBtn" onclick="deleteCurrent()">삭제</button>
+    </div>
+
+    <div class="stickyBar">
+      <button class="tab active" onclick="switchTab('en')" id="tabEn">영문</button>
+      <button class="tab" onclick="switchTab('ko')" id="tabKo">번역</button>
+      <button class="copyBtn copyBtnStart" onclick="copySwapEnglish()">스왑 복사</button>
+      <button class="copyBtn" onclick="copyEnglish()">영문 복사</button>
+    </div>
+
+    <div class="body">
+      <textarea id="contentEn"></textarea>
+      <textarea id="contentKo" class="hidden"></textarea>
+    </div>
+
+    <div class="bottomBar">
+      <input id="tagsInput" placeholder="태그 (쉼표 구분)" />
+    </div>
+  </div>
+
 </div>
 
-<!-- DETAIL SCREEN -->
-<div id="screenDetail">
-  <div class="topBar">
-    <button class="backBtn" onclick="goList()">←</button>
-    <input id="titleInput" class="titleInput" placeholder="제목" />
-    <button id="editBtn" class="editBtn" onclick="toggleEdit()">편집</button>
-    <button class="delBtn" id="delBtn" onclick="deleteCurrent()">삭제</button>
+<div id="toolsModal" class="modalBackdrop hidden" onclick="handleToolsBackdropClick(event)">
+  <div class="modalCard">
+    <div class="modalTitle">기타 기능</div>
+    <button type="button" class="modalActionBtn" onclick="runExportFromModal()">JSON 백업</button>
+    <button type="button" class="modalActionBtn" onclick="runImportFromModal()">JSON 복원</button>
+    <button type="button" class="modalCloseBtn" onclick="closeToolsModal()">닫기</button>
   </div>
-
-  <div class="stickyBar">
-    <button class="tab active" onclick="switchTab('en')" id="tabEn">영문</button>
-    <button class="tab" onclick="switchTab('ko')" id="tabKo">번역</button>
-    <button class="copyBtn copyBtnStart" onclick="copySwapEnglish()">스왑 복사</button>
-    <button class="copyBtn" onclick="copyEnglish()">영문 복사</button>
-  </div>
-
-  <div class="body">
-    <textarea id="contentEn"></textarea>
-    <textarea id="contentKo" class="hidden"></textarea>
-  </div>
-
-  <div class="bottomBar">
-    <input id="tagsInput" placeholder="태그 (쉼표 구분)" />
-  </div>
-</div>
-
 </div>
 
 <script>
+const STORAGE_KEY = "memos";
+const SCHEMA_VERSION = 2;
+const MAX_PENDING_OPS = 500;
+
+const storage = {
+  load() {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  },
+  save(root) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(root));
+  }
+};
+
 let state = {
   memos: [],
   currentId: null,
-  editing: false
+  editing: false,
+  dirty: false,
+  lastSyncedAt: null,
+  pendingOps: []
 };
 
+function nowIso() {
+  return new Date().toISOString();
+}
+
+function createId() {
+  if (window.crypto && typeof window.crypto.randomUUID === "function") {
+    return window.crypto.randomUUID();
+  }
+  return `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+}
+
+function toIsoOrDefault(value, fallback) {
+  if (value == null) return fallback;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return fallback;
+  return date.toISOString();
+}
+
+function normalizeTags(value) {
+  if (Array.isArray(value)) {
+    return value.map((tag) => String(tag).trim()).filter(Boolean);
+  }
+  if (typeof value === "string") {
+    return value.split(",").map((tag) => tag.trim()).filter(Boolean);
+  }
+  return [];
+}
+
+function normalizeMemo(raw) {
+  if (!raw || typeof raw !== "object") return null;
+
+  const now = nowIso();
+  const createdAt = toIsoOrDefault(raw.createdAt, now);
+  const updatedAt = toIsoOrDefault(raw.updatedAt, createdAt);
+  const deletedAt = raw.deletedAt == null ? null : toIsoOrDefault(raw.deletedAt, null);
+
+  return {
+    id: String(raw.id || "").trim() || createId(),
+    title: String(raw.title || ""),
+    contentEn: String(raw.contentEn || ""),
+    contentKo: String(raw.contentKo || ""),
+    tags: normalizeTags(raw.tags),
+    createdAt,
+    updatedAt,
+    deletedAt
+  };
+}
+
+function migrateData(input) {
+  if (!input) return { schemaVersion: SCHEMA_VERSION, memos: [] };
+
+  if (Array.isArray(input)) {
+    return {
+      schemaVersion: SCHEMA_VERSION,
+      memos: input.map(normalizeMemo).filter(Boolean)
+    };
+  }
+
+  if (typeof input !== "object" || !Array.isArray(input.memos)) {
+    throw new Error("Invalid memo data format.");
+  }
+
+  const version = Number(input.schemaVersion) || 1;
+  let memos = input.memos.slice();
+
+  if (version < 2) {
+    memos = memos.map((memo) => ({ ...memo, deletedAt: memo.deletedAt ?? null }));
+  }
+
+  return {
+    schemaVersion: SCHEMA_VERSION,
+    memos: memos.map(normalizeMemo).filter(Boolean)
+  };
+}
+
+function enqueueOp(type, memoId, at) {
+  state.pendingOps.push({ type, memoId, at });
+  if (state.pendingOps.length > MAX_PENDING_OPS) {
+    state.pendingOps = state.pendingOps.slice(-MAX_PENDING_OPS);
+  }
+}
+
+function buildRootPayload() {
+  return {
+    schemaVersion: SCHEMA_VERSION,
+    memos: state.memos
+  };
+}
+
 function saveAll() {
-  localStorage.setItem("memos", JSON.stringify(state.memos));
+  storage.save(buildRootPayload());
 }
 
 function loadAll() {
-  const data = localStorage.getItem("memos");
-  if (data) state.memos = JSON.parse(data);
+  const migrated = migrateData(storage.load());
+  state.memos = migrated.memos;
 }
 
 function formatDate(date) {
   return new Date(date).toLocaleDateString();
 }
 
+function visibleMemos() {
+  return state.memos.filter((memo) => !memo.deletedAt);
+}
+
+function getMemoById(id) {
+  return state.memos.find((memo) => memo.id === id) || null;
+}
+
+function getCurrentMemo() {
+  const memo = getMemoById(state.currentId);
+  if (!memo || memo.deletedAt) return null;
+  return memo;
+}
+
 function renderList() {
   const container = document.getElementById("memoList");
   container.innerHTML = "";
 
-  state.memos
-    .sort((a,b)=> new Date(b.updatedAt)-new Date(a.updatedAt))
-    .forEach(memo=>{
+  visibleMemos()
+    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+    .forEach((memo) => {
       const div = document.createElement("div");
-      div.className="memoItem";
+      div.className = "memoItem";
       div.innerHTML = `
         <div class="memoTitle">${memo.title || "(제목 없음)"}</div>
         <div class="memoDate">${formatDate(memo.updatedAt)}</div>
       `;
-      div.onclick = ()=> openMemo(memo.id);
+      div.onclick = () => openMemo(memo.id);
       container.appendChild(div);
     });
 }
 
 function createMemo() {
-  const id = Date.now().toString();
-  const now = new Date().toISOString();
+  const id = createId();
+  const now = nowIso();
   const memo = {
     id,
-    title:"",
-    contentEn:"",
-    contentKo:"",
-    tags:[],
-    createdAt:now,
-    updatedAt:now
+    title: "",
+    contentEn: "",
+    contentKo: "",
+    tags: [],
+    createdAt: now,
+    updatedAt: now,
+    deletedAt: null
   };
+
   state.memos.push(memo);
+  enqueueOp("upsert", id, now);
   saveAll();
   openMemo(id);
   setEditing(true);
@@ -463,32 +693,52 @@ function createMemo() {
 
 function openMemo(id) {
   state.currentId = id;
-  const memo = state.memos.find(m=>m.id===id);
+  const memo = getCurrentMemo();
+  if (!memo) {
+    alert("메모를 찾을 수 없습니다.");
+    goList();
+    return;
+  }
 
   document.getElementById("titleInput").value = memo.title;
   document.getElementById("contentEn").value = memo.contentEn;
   document.getElementById("contentKo").value = memo.contentKo;
   document.getElementById("tagsInput").value = memo.tags.join(",");
 
+  state.dirty = false;
   setEditing(false);
 
-  document.getElementById("screenList").style.display="none";
-  document.getElementById("screenDetail").style.display="flex";
+  document.getElementById("screenList").style.display = "none";
+  document.getElementById("screenDetail").style.display = "flex";
 }
 
 function goList() {
-  document.getElementById("screenDetail").style.display="none";
-  document.getElementById("screenList").style.display="flex";
+  if (state.editing && hasUnsavedChanges()) {
+    const shouldSave = confirm("저장하시겠습니까?");
+    if (shouldSave) {
+      saveCurrent();
+      setEditing(false);
+    } else {
+      const shouldDiscard = confirm("저장하지 않고 나가시겠습니까?");
+      if (!shouldDiscard) return;
+      discardCurrentEdits();
+      state.dirty = false;
+      setEditing(false);
+    }
+  }
+
+  document.getElementById("screenDetail").style.display = "none";
+  document.getElementById("screenList").style.display = "flex";
   renderList();
 }
 
 function toggleEdit() {
   if (!state.editing) {
     setEditing(true);
-  } else {
-    saveCurrent();
-    setEditing(false);
+    return;
   }
+  saveCurrent();
+  setEditing(false);
 }
 
 function setEditing(value) {
@@ -498,17 +748,60 @@ function setEditing(value) {
   document.getElementById("contentEn").readOnly = !value;
   document.getElementById("contentKo").readOnly = !value;
   document.getElementById("tagsInput").readOnly = !value;
-  document.getElementById("delBtn").style.display = value ? "inline-block" : "none"; // ✅
+  document.getElementById("delBtn").style.display = value ? "inline-block" : "none";
 }
 
 function saveCurrent() {
-  const memo = state.memos.find(m=>m.id===state.currentId);
+  const memo = getCurrentMemo();
+  if (!memo) return;
+
   memo.title = document.getElementById("titleInput").value;
   memo.contentEn = document.getElementById("contentEn").value;
   memo.contentKo = document.getElementById("contentKo").value;
-  memo.tags = document.getElementById("tagsInput").value.split(",").map(t=>t.trim()).filter(Boolean);
-  memo.updatedAt = new Date().toISOString();
+  memo.tags = normalizeTags(document.getElementById("tagsInput").value);
+  memo.updatedAt = nowIso();
+
+  state.dirty = false;
+  enqueueOp("upsert", memo.id, memo.updatedAt);
   saveAll();
+}
+
+function hasUnsavedChanges() {
+  if (!state.editing) return false;
+  const memo = getCurrentMemo();
+  if (!memo) return false;
+
+  const title = document.getElementById("titleInput").value;
+  const contentEn = document.getElementById("contentEn").value;
+  const contentKo = document.getElementById("contentKo").value;
+  const tags = normalizeTags(document.getElementById("tagsInput").value);
+
+  return (
+    title !== memo.title ||
+    contentEn !== memo.contentEn ||
+    contentKo !== memo.contentKo ||
+    JSON.stringify(tags) !== JSON.stringify(memo.tags)
+  );
+}
+
+function discardCurrentEdits() {
+  const memo = getCurrentMemo();
+  if (!memo) return;
+  document.getElementById("titleInput").value = memo.title;
+  document.getElementById("contentEn").value = memo.contentEn;
+  document.getElementById("contentKo").value = memo.contentKo;
+  document.getElementById("tagsInput").value = memo.tags.join(",");
+}
+
+function markDirty() {
+  if (!state.editing || !state.currentId) return;
+  state.dirty = true;
+}
+
+function bindDirtyTracking() {
+  ["titleInput", "contentEn", "contentKo", "tagsInput"].forEach((id) => {
+    document.getElementById(id).addEventListener("input", markDirty);
+  });
 }
 
 function switchTab(tab) {
@@ -517,7 +810,7 @@ function switchTab(tab) {
   document.getElementById("contentEn").classList.add("hidden");
   document.getElementById("contentKo").classList.add("hidden");
 
-  if (tab==="en") {
+  if (tab === "en") {
     document.getElementById("tabEn").classList.add("active");
     document.getElementById("contentEn").classList.remove("hidden");
   } else {
@@ -561,18 +854,127 @@ async function copySwapEnglish() {
 }
 
 function deleteCurrent() {
-  const memo = state.memos.find(m => m.id === state.currentId);
-  const name = memo?.title?.trim() || "(제목 없음)";
+  const memo = getCurrentMemo();
+  if (!memo) return;
+  const name = memo.title.trim() || "(제목 없음)";
   if (!confirm(`${name} 메모를 삭제할까요? 되돌릴 수 없습니다.`)) return;
 
-  state.memos = state.memos.filter(m => m.id !== state.currentId);
-  state.currentId = null;
+  const now = nowIso();
+  memo.deletedAt = now;
+  memo.updatedAt = now;
+  enqueueOp("delete", memo.id, now);
   saveAll();
+
+  state.currentId = null;
   goList();
 }
 
+function exportJsonBackup() {
+  const payload = {
+    schemaVersion: SCHEMA_VERSION,
+    exportedAt: nowIso(),
+    memos: state.memos
+  };
+
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `memos-backup-${new Date().toISOString().slice(0, 10)}.json`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+function openToolsModal() {
+  document.getElementById("toolsModal").classList.remove("hidden");
+}
+
+function closeToolsModal() {
+  document.getElementById("toolsModal").classList.add("hidden");
+}
+
+function handleToolsBackdropClick(event) {
+  if (event.target.id === "toolsModal") {
+    closeToolsModal();
+  }
+}
+
+function runExportFromModal() {
+  closeToolsModal();
+  exportJsonBackup();
+}
+
+function openImportPicker() {
+  const input = document.getElementById("importJsonInput");
+  input.value = "";
+  input.click();
+}
+
+function runImportFromModal() {
+  closeToolsModal();
+  openImportPicker();
+}
+
+function mergeImportedMemos(importedMemos, preferImportedOnConflict) {
+  const map = new Map(state.memos.map((memo) => [memo.id, memo]));
+
+  importedMemos.forEach((incoming) => {
+    const existing = map.get(incoming.id);
+    if (!existing) {
+      map.set(incoming.id, incoming);
+      return;
+    }
+
+    if (preferImportedOnConflict) {
+      map.set(incoming.id, incoming);
+      return;
+    }
+
+    const incomingTs = new Date(incoming.updatedAt).getTime();
+    const existingTs = new Date(existing.updatedAt).getTime();
+    map.set(incoming.id, incomingTs >= existingTs ? incoming : existing);
+  });
+
+  return Array.from(map.values());
+}
+
+async function importJsonBackup(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  try {
+    const text = await file.text();
+    const parsed = JSON.parse(text);
+    const migrated = migrateData(parsed);
+
+    const preferImported = confirm(
+      "같은 ID의 메모는 가져온 파일 기준으로 덮어쓸까요? 취소하면 updatedAt이 더 최신인 항목을 유지합니다."
+    );
+
+    state.memos = mergeImportedMemos(migrated.memos, preferImported);
+    saveAll();
+    renderList();
+    alert("JSON 복원이 완료되었습니다.");
+  } catch (error) {
+    console.error(error);
+    alert("JSON 복원에 실패했습니다. 파일 형식을 확인해 주세요.");
+  } finally {
+    event.target.value = "";
+  }
+}
+
+window.addEventListener("beforeunload", (event) => {
+  if (state.editing && hasUnsavedChanges()) {
+    event.preventDefault();
+    event.returnValue = "";
+  }
+});
+
 loadAll();
 renderList();
+bindDirtyTracking();
 </script>
 
 </body>
