@@ -100,6 +100,20 @@ button {
   color: #444;
 }
 
+.searchForm .tab {
+  padding: 10px 18px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: white;
+  color: #333;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.searchForm .tab:hover {
+  background-color: #f1f1f1;
+}
+
 .moreBtn {
   padding: 14px 16px;
   border: 1px solid #ccc;
@@ -448,6 +462,11 @@ textarea::placeholder {
     font-size: 13px;
   }
 
+  .searchForm .tab {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+
   .copyBtn {
     padding: 8px 14px;
     font-size: 13px;
@@ -501,7 +520,7 @@ textarea::placeholder {
       <div class="searchArea">
         <form class="searchForm" onsubmit="runSearch(event)">
           <button id="searchModeToggle" class="tab" type="button" onclick="toggleSearchMode()">&lt;제목&gt;</button>
-          <input id="searchInput" class="searchInput" type="text" placeholder="검색어 입력 (#태그)" />
+          <input id="searchInput" class="searchInput" type="text" placeholder="제목 검색 입력(#태그)" />
           <button type="submit" class="tab">검색</button>
         </form>
         <div id="searchStatus" class="searchStatus hidden"></div>
@@ -751,16 +770,17 @@ function runSearch(event) {
 
 function renderSearchModeToggle() {
   const toggleBtn = document.getElementById("searchModeToggle");
+  const searchInput = document.getElementById("searchInput");
   if (!toggleBtn) return;
 
   if (state.search.mode === "all") {
     toggleBtn.textContent = "내용";
-    toggleBtn.classList.add("active");
+    if (searchInput) searchInput.placeholder = "내용 검색 입력(#태그)";
     return;
   }
 
   toggleBtn.textContent = "제목";
-  toggleBtn.classList.remove("active");
+  if (searchInput) searchInput.placeholder = "제목 검색 입력(#태그)";
 }
 
 function toggleSearchMode() {
