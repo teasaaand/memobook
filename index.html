@@ -71,6 +71,52 @@ button {
   margin-left: auto;
 }
 
+.searchArea {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.searchForm {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 220px;
+  padding: 12px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.searchMode {
+  padding: 12px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 14px;
+}
+
+.searchBtn {
+  padding: 12px 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #4CAF50;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.searchStatus {
+  font-size: 14px;
+  color: #444;
+}
+
 .moreBtn {
   padding: 14px 16px;
   border: 1px solid #ccc;
@@ -469,6 +515,17 @@ textarea::placeholder {
         <button type="button" class="moreBtn" onclick="openToolsModal()">⋯</button>
         <button type="button" onclick="createMemo()">+ 새 메모</button>
       </div>
+      <div class="searchArea">
+        <form class="searchForm" onsubmit="runSearch(event)">
+          <input id="searchInput" class="searchInput" type="text" placeholder="검색어 입력 (#태그)" />
+          <select id="searchMode" class="searchMode">
+            <option value="title">제목 검색</option>
+            <option value="all">내용까지 검색</option>
+          </select>
+          <button type="submit" class="searchBtn">검색</button>
+        </form>
+        <div id="searchStatus" class="searchStatus hidden"></div>
+      </div>
       <input id="importJsonInput" class="hidden" type="file" accept="application/json,.json" onchange="importJsonBackup(event)" />
     </div>
     <div id="memoList"></div>
@@ -533,7 +590,12 @@ let state = {
   editing: false,
   dirty: false,
   lastSyncedAt: null,
-  pendingOps: []
+  pendingOps: [],
+  search: {
+    active: false,
+    query: "",
+    mode: "title"
+  }
 };
 
 function nowIso() {
@@ -642,6 +704,74 @@ function visibleMemos() {
   return state.memos.filter((memo) => !memo.deletedAt);
 }
 
+function normalizeSearchQuery(value) {
+  return String(value || "").trim();
+}
+
+function isTagSearchQuery(query) {
+  if (!query.startsWith("#")) return false;
+  return !query.slice(1).includes("#");
+}
+
+function memoMatchesTagSearch(memo, query) {
+  const tagQuery = query.slice(1).trim().toLowerCase();
+  if (!Array.isArray(memo.tags) || memo.tags.length === 0) return false;
+  if (!tagQuery) return true;
+  return memo.tags.some((tag) => String(tag).toLowerCase().includes(tagQuery));
+}
+
+function memoMatchesTextSearch(memo, query, mode) {
+  const needle = query.toLowerCase();
+  if (mode === "all") {
+    const haystack = `${memo.title}\n${memo.contentEn}\n${memo.contentKo}`.toLowerCase();
+    return haystack.includes(needle);
+  }
+  return String(memo.title).toLowerCase().includes(needle);
+}
+
+function getFilteredMemos() {
+  const memos = visibleMemos();
+  if (!state.search.active) return memos;
+
+  const query = state.search.query;
+  if (isTagSearchQuery(query)) {
+    return memos.filter((memo) => memoMatchesTagSearch(memo, query));
+  }
+  return memos.filter((memo) => memoMatchesTextSearch(memo, query, state.search.mode));
+}
+
+function renderSearchStatus(count) {
+  const statusEl = document.getElementById("searchStatus");
+  if (!state.search.active) {
+    statusEl.classList.add("hidden");
+    statusEl.textContent = "";
+    return;
+  }
+  statusEl.textContent = `${state.search.query} 결과 ${count} 건`;
+  statusEl.classList.remove("hidden");
+}
+
+function runSearch(event) {
+  if (event) event.preventDefault();
+
+  const searchInput = document.getElementById("searchInput");
+  const searchMode = document.getElementById("searchMode");
+  const query = normalizeSearchQuery(searchInput.value);
+
+  if (!query) {
+    state.search.active = false;
+    state.search.query = "";
+    state.search.mode = searchMode.value || "title";
+    renderList();
+    return;
+  }
+
+  state.search.active = true;
+  state.search.query = query;
+  state.search.mode = searchMode.value || "title";
+  renderList();
+}
+
 function getMemoById(id) {
   return state.memos.find((memo) => memo.id === id) || null;
 }
@@ -656,18 +786,20 @@ function renderList() {
   const container = document.getElementById("memoList");
   container.innerHTML = "";
 
-  visibleMemos()
+  const filteredMemos = getFilteredMemos()
     .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
-    .forEach((memo) => {
-      const div = document.createElement("div");
-      div.className = "memoItem";
-      div.innerHTML = `
-        <div class="memoTitle">${memo.title || "(제목 없음)"}</div>
-        <div class="memoDate">${formatDate(memo.updatedAt)}</div>
-      `;
-      div.onclick = () => openMemo(memo.id);
-      container.appendChild(div);
-    });
+  renderSearchStatus(filteredMemos.length);
+
+  filteredMemos.forEach((memo) => {
+    const div = document.createElement("div");
+    div.className = "memoItem";
+    div.innerHTML = `
+      <div class="memoTitle">${memo.title || "(제목 없음)"}</div>
+      <div class="memoDate">${formatDate(memo.updatedAt)}</div>
+    `;
+    div.onclick = () => openMemo(memo.id);
+    container.appendChild(div);
+  });
 }
 
 function createMemo() {
