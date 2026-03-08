@@ -83,33 +83,16 @@ button {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  align-items: center;
 }
 
 .searchInput {
   flex: 1;
-  min-width: 220px;
+  min-width: 180px;
   padding: 12px 14px;
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 14px;
-}
-
-.searchMode {
-  padding: 12px 14px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background: #fff;
-  font-size: 14px;
-}
-
-.searchBtn {
-  padding: 12px 16px;
-  border: none;
-  border-radius: 8px;
-  background-color: #4CAF50;
-  color: #fff;
-  font-size: 14px;
-  font-weight: 600;
 }
 
 .searchStatus {
@@ -517,12 +500,9 @@ textarea::placeholder {
       </div>
       <div class="searchArea">
         <form class="searchForm" onsubmit="runSearch(event)">
+          <button id="searchModeToggle" class="tab" type="button" onclick="toggleSearchMode()">&lt;제목&gt;</button>
           <input id="searchInput" class="searchInput" type="text" placeholder="검색어 입력 (#태그)" />
-          <select id="searchMode" class="searchMode">
-            <option value="title">제목 검색</option>
-            <option value="all">내용까지 검색</option>
-          </select>
-          <button type="submit" class="searchBtn">검색</button>
+          <button type="submit" class="tab">검색</button>
         </form>
         <div id="searchStatus" class="searchStatus hidden"></div>
       </div>
@@ -755,21 +735,40 @@ function runSearch(event) {
   if (event) event.preventDefault();
 
   const searchInput = document.getElementById("searchInput");
-  const searchMode = document.getElementById("searchMode");
   const query = normalizeSearchQuery(searchInput.value);
 
   if (!query) {
     state.search.active = false;
     state.search.query = "";
-    state.search.mode = searchMode.value || "title";
     renderList();
     return;
   }
 
   state.search.active = true;
   state.search.query = query;
-  state.search.mode = searchMode.value || "title";
   renderList();
+}
+
+function renderSearchModeToggle() {
+  const toggleBtn = document.getElementById("searchModeToggle");
+  if (!toggleBtn) return;
+
+  if (state.search.mode === "all") {
+    toggleBtn.textContent = "내용";
+    toggleBtn.classList.add("active");
+    return;
+  }
+
+  toggleBtn.textContent = "제목";
+  toggleBtn.classList.remove("active");
+}
+
+function toggleSearchMode() {
+  state.search.mode = state.search.mode === "title" ? "all" : "title";
+  renderSearchModeToggle();
+  if (state.search.active) {
+    renderList();
+  }
 }
 
 function getMemoById(id) {
@@ -1105,6 +1104,7 @@ window.addEventListener("beforeunload", (event) => {
 });
 
 loadAll();
+renderSearchModeToggle();
 renderList();
 bindDirtyTracking();
 </script>
